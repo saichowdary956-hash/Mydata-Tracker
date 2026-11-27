@@ -1,0 +1,7 @@
+@echo off
+set "WATCH=%USERPROFILE%\Downloads"
+set "WORKBOOK=%~dp0Daily_Tracker_Recreated.xlsx"
+cd /d "%~dp0"
+py -m pip install --quiet openpyxl
+py datalog_csv_sync.py --watch "%WATCH%" --workbook "%WORKBOOK%"
+pause
