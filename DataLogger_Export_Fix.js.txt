@@ -1,0 +1,25 @@
+REPLACE ONLY THE INNER DATA-ROW LOOP IN exportCSV() WITH THIS VERSION.
+
+It exports the cumulative duration stored in conditionData, rather than only
+the first entry returned by recordingSessions[category].find(...).
+
+        for (let i = 0; i < maxConditions; i++) {
+            Object.keys(categories).forEach(category => {
+                const condition = categories[category][i];
+
+                if (condition) {
+                    const key = `${category}|${condition}`;
+                    const totalSeconds = conditionData[key]?.time || 0;
+
+                    csv += `,${condition},${formatTime(totalSeconds)},`;
+                } else {
+                    csv += ',,,';
+                }
+            });
+            csv += '\\n';
+        }
+
+Note: if a recording is still active when Export CSV is clicked, the live elapsed
+time is not yet added to conditionData[key].time until stopRecording() runs.
+For an accurate export, click Stop All before Export CSV, or have the export
+routine calculate the active elapsed time as well.
